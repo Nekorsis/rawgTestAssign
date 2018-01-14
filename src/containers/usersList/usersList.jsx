@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, Button, PageHeader, Modal } from 'react-bootstrap';
+import { Grid, Panel, Button, PageHeader, Modal } from 'react-bootstrap';
 import User from './../../components/user/user.jsx';
 import UserInputs from './../../components/userInputs/userInputs.jsx';
 import UsersTable from './../../components/usersTable/usersTable.jsx';
@@ -21,6 +21,7 @@ class UsersList extends React.PureComponent {
       phoneInputValue: '',
       users: null,
       editUser: null,
+      failedInputs: null,
     };
   }
 
@@ -75,6 +76,12 @@ class UsersList extends React.PureComponent {
 
   addUser = () => {
     const users = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : [];
+    if (!this.state.userNameInputValue
+        || !this.state.birthDateInputValue
+        || !this.state.adressInputValue
+        || !this.state.cityInputValue
+        || !this.state.phoneInputValue) {
+    }
     const User = {
       id: uuidv1(),
       name: this.state.userNameInputValue,
@@ -139,6 +146,7 @@ class UsersList extends React.PureComponent {
   render () {
     const usersData = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : null;
     return (
+      <Grid>
       <Panel>
         <PageHeader>
           {'Rawg test assign '} 
@@ -183,6 +191,7 @@ class UsersList extends React.PureComponent {
           deleteUser={this.deleteUser}
         />
       </Panel>
+      </Grid>
     );
   }
 }
