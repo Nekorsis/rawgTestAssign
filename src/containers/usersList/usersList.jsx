@@ -6,7 +6,9 @@ import UsersTable from './../../components/usersTable/usersTable.jsx';
 import UserModal from './../../components/userModals/userModals.jsx';
 import uuidv1 from 'uuid/v1';
 
-class UsersList extends React.Component {
+import './../../styles/index.css';
+
+class UsersList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,9 +46,12 @@ class UsersList extends React.Component {
     });
   };
 
-  birthDateInputHandle = (e) => {
+  birthDateInputHandle = (date) => {
+    const curr_date = date.getDate();
+    const curr_month = date.getMonth() + 1;
+    const curr_year = date.getFullYear();
     this.setState({
-      birthDateInputValue: e.target.value,
+      birthDateInputValue: `${curr_year}/${curr_month}/${curr_date}`,
     });
   };
 

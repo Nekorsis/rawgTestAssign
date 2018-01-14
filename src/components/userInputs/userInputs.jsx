@@ -1,18 +1,27 @@
 import React from 'react';
+import { ButtonToolbar, DropdownButton, MenuItem } from 'react-bootstrap';
+import DatePicker from 'react-date-picker';
 
-class UserInputs extends React.PureComponent {
+class UserInputs extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hey: null,
+    };
+  };
   render () {
     return (
       <div>
         <input
+          maxLength={100}
           onChange={this.props.userNameInputHandle}
           placeholder={"ФИО"}
           defaultValue={this.props.editUser ? this.props.editUser.name : ''}
         />
-        <input
+        <DatePicker
+          required={true}
           onChange={this.props.birthDateInputHandle}
-          placeholder={"Дата рождения"}
-          defaultValue={this.props.editUser ? this.props.editUser.birthDate : ''}
+          value={new Date()}
         />
         <input
           onChange={this.props.adressInputHandle}
