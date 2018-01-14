@@ -1,7 +1,9 @@
 import React from 'react';
-import { Table, Panel, Button, PageHeader, Modal } from 'react-bootstrap';
+import { Panel, Button, PageHeader, Modal } from 'react-bootstrap';
 import User from './../../components/user/user.jsx';
 import UserInputs from './../../components/userInputs/userInputs.jsx';
+import UsersTable from './../../components/usersTable/usersTable.jsx';
+import UserModal from './../../components/userModals/userModals.jsx';
 import uuidv1 from 'uuid/v1';
 
 class UsersList extends React.Component {
@@ -134,75 +136,47 @@ class UsersList extends React.Component {
     return (
       <Panel>
         <PageHeader>
-          {'Rawr test assign '} 
+          {'Rawg test assign '} 
           <Button onClick={this.openModalHandler} bsStyle="primary" >
             {' Добавить пользователя'}
           </Button>
         </PageHeader>
-        <Modal show={this.state.isAddUserModalOpen} onHide={this.openModalHandler}>
-          <Modal.Header>
-            <Modal.Title>{'Добавить пользователя'}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <UserInputs
+        <UserModal
+          show={this.state.isAddUserModalOpen}
+          onHide={this.openModalHandler}
+          title={'Добавить пользователя'}
+          onSuccsess={this.addUser}
+          onCancel={this.openModalHandler}
+        >
+          <UserInputs
             userNameInputHandle={this.userNameInputHandle}
             birthDateInputHandle={this.birthDateInputHandle}
             adressInputHandle={this.adressInputHandle}
             cityInputInputHandle={this.cityInputInputHandle}
             phoneInputHandle={this.phoneInputHandle}
           />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.openModalHandler}>{'Отмена'}</Button>
-            <Button bsStyle="primary" onClick={this.addUser}>{'Добавить'}</Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal show={this.state.isEditModalOpen} onHide={this.openEditModal}>
-          <Modal.Header>
-            <Modal.Title>{'Отредактировать пользователя'}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <UserInputs
-              userNameInputHandle={this.userNameInputHandle}
-              birthDateInputHandle={this.birthDateInputHandle}
-              adressInputHandle={this.adressInputHandle}
-              cityInputInputHandle={this.cityInputInputHandle}
-              phoneInputHandle={this.phoneInputHandle}
-              editUser={this.state.editUser}
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.openEditModal}>{'Отмена'}</Button>
-            <Button bsStyle="primary" onClick={this.editUser}>{'Добавить'}</Button>
-          </Modal.Footer>
-        </Modal>
-        <Table striped bordered condensed hover>
-          <thead>
-            <tr>
-              <th>Фио</th>
-              <th>Дата рождения</th>
-              <th>Адрес</th>
-              <th>Город</th>
-              <th>Телефон</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {usersData.map(user => {
-              return (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.birthDate}</td>
-                  <td>{user.adress}</td>
-                  <td>{user.city}</td>
-                  <td>{user.phone}</td>
-                  <td onClick={() => {this.openEditModal(user)}}>{'Редактировать'}</td>
-                  <td onClick={() => {this.deleteUser(user.id)}}>{'Удалить'}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+        </UserModal>
+        <UserModal
+          show={this.state.isEditModalOpen}
+          onHide={this.openEditModal}
+          title={'Отредактировать пользователя'}
+          onSuccsess={this.editUser}
+          onCancel={this.openEditModal}
+        >
+          <UserInputs
+            userNameInputHandle={this.userNameInputHandle}
+            birthDateInputHandle={this.birthDateInputHandle}
+            adressInputHandle={this.adressInputHandle}
+            cityInputInputHandle={this.cityInputInputHandle}
+            phoneInputHandle={this.phoneInputHandle}
+            editUser={this.state.editUser}
+          />
+        </UserModal>
+        <UsersTable
+          usersData={usersData}
+          openEditModal={this.openEditModal}
+          deleteUser={this.deleteUser}
+        />
       </Panel>
     );
   }
