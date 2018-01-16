@@ -12,88 +12,27 @@ class UsersList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isAddUserModalOpen: false,
-      isEditModalOpen: false,
-      userNameInputValue: '',
-      birthDateInputValue: '',
-      adressInputValue: '',
-      cityInputValue: '',
-      phoneInputValue: '',
+      isModalOpen: false,
       users: null,
       editUser: null,
-      failedInputs: null,
+      isEditing: false,
+      formErrors: null,
     };
   }
 
-  resetInputState = () => {
-    this.setState({
-      userNameInputValue: '',
-      birthDateInputValue: '',
-      adressInputValue: '',
-      cityInputValue: '',
-      phoneInputValue: '',
-    })
-  };
-
-  openModalHandler = () => {
-    this.setState((prevState) => {
-      return {isAddUserModalOpen: !prevState.isAddUserModalOpen}
-    });
-  };
-
-  userNameInputHandle = (e) => {
-    this.setState({
-      userNameInputValue: e.target.value,
-    });
-  };
-
-  birthDateInputHandle = (date) => {
-    const curr_date = date.getDate();
-    const curr_month = date.getMonth() + 1;
-    const curr_year = date.getFullYear();
-    this.setState({
-      birthDateInputValue: `${curr_year}/${curr_month}/${curr_date}`,
-    });
-  };
-
-  adressInputHandle = (e) => {
-    this.setState({
-      adressInputValue: e.target.value,
-    });
-  };
-
-  cityInputInputHandle = (e) => {
-    this.setState({
-      cityInputValue: e.target.value,
-    });
-  };
-
-  phoneInputHandle = (e) => {
-    this.setState({
-      phoneInputValue: e.target.value,
-    });
-  };
-
-  addUser = () => {
+  addUser = (inputsData) => {
     const users = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : [];
-    if (!this.state.userNameInputValue
-        || !this.state.birthDateInputValue
-        || !this.state.adressInputValue
-        || !this.state.cityInputValue
-        || !this.state.phoneInputValue) {
-    }
     const User = {
       id: uuidv1(),
-      name: this.state.userNameInputValue,
-      birthDate: this.state.birthDateInputValue,
-      adress: this.state.adressInputValue,
-      city: this.state.cityInputValue,
-      phone: this.state.phoneInputValue,
+      name: inputsData.userNameInputValue,
+      birthDate: inputsData.birthDateInputValue,
+      adress: inputsData.adressInputValue,
+      city: inputsData.cityInputValue,
+      phone: inputsData.phoneInputValue,
     };
     users.push(User);
     localStorage.setItem('usersList', JSON.stringify(users));
-    this.resetInputState();
-    this.openModalHandler();
+    this.closeEditModal();
   };
 
   deleteUser = (userId) => {
@@ -107,16 +46,34 @@ class UsersList extends React.PureComponent {
     });
   };
 
-  openEditModal = (user) => {
-    this.setState((prevState) => {
+  openAddModal = () => {
+    this.setState(() => {
       return {
-        isEditModalOpen: !prevState.isEditModalOpen,
-        editUser: user,
+        isModalOpen: true,
        };
     });
   };
 
-  editUser = () => {
+  openEditModal = (user) => {
+    this.setState(() => {
+      return {
+        isEditing: true,
+        isModalOpen: true,
+        editUser: user,
+       };
+    });
+  };
+  
+  closeEditModal = () => {
+    this.setState(() => {
+      return {
+        isEditing: false,
+        isModalOpen: false,
+      };
+    });
+  };
+
+  editUser = (inputsData) => {
     const user = this.state.editUser;
     const users = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : [];
     let userIndex;
@@ -128,11 +85,11 @@ class UsersList extends React.PureComponent {
     });
     const User = {
       id: user.id,
-      name: this.state.userNameInputValue !== '' ? this.state.userNameInputValue : user.name,
-      birthDate: this.state.birthDateInputValue !== '' ? this.state.birthDateInputValue : user.birthDate,
-      adress: this.state.adressInputValue !== '' ? this.state.adressInputValue : user.adress,
-      city: this.state.cityInputValue !== '' ? this.state.cityInputValue : user.city,
-      phone: this.state.phoneInputValue !== '' ? this.state.phoneInputValue : user.phone,
+      name: inputsData.userNameInputValue,
+      birthDate: inputsData.birthDateInputValue,
+      adress: inputsData.adressInputValue,
+      city: inputsData.cityInputValue,
+      phone: inputsData.phoneInputValue,
     };
     let updatedUsers = users;
     updatedUsers[userIndex] = User;
@@ -140,7 +97,7 @@ class UsersList extends React.PureComponent {
     this.setState({
       users: updatedUsers,
     });
-    this.openEditModal();
+    this.closeEditModal();
   };
 
   render () {
@@ -150,41 +107,27 @@ class UsersList extends React.PureComponent {
       <Panel>
         <PageHeader>
           {'Rawg test assign '} 
-          <Button onClick={this.openModalHandler} bsStyle="primary" >
+          <Button onClick={this.openAddModal} bsStyle="primary" >
             {' Добавить пользователя'}
           </Button>
         </PageHeader>
         <UserModal
-          show={this.state.isAddUserModalOpen}
-          onHide={this.openModalHandler}
-          title={'Добавить пользователя'}
-          onSuccsess={this.addUser}
-          onCancel={this.openModalHandler}
-        >
-          <UserInputs
-            userNameInputHandle={this.userNameInputHandle}
-            birthDateInputHandle={this.birthDateInputHandle}
-            adressInputHandle={this.adressInputHandle}
-            cityInputInputHandle={this.cityInputInputHandle}
-            phoneInputHandle={this.phoneInputHandle}
-          />
-        </UserModal>
-        <UserModal
-          show={this.state.isEditModalOpen}
-          onHide={this.openEditModal}
+          editUser={this.state.editUser}
+          show={this.state.isModalOpen}
+          onHide={this.closeEditModal}
+          title={this.state.isEditing === false ? 'Добавить пользователя' : 'Отредактировать пользователя'}
+          onSuccsess={this.state.isEditing === false ? this.addUser : this.editUser}
+          onCancel={this.closeEditModal}
+        />
+
+        {/*<UserModal
+          editUser={this.state.editUser}
+          show={this.state.isModalOpen}
+          onHide={this.closeEditModal}
           title={'Отредактировать пользователя'}
           onSuccsess={this.editUser}
-          onCancel={this.openEditModal}
-        >
-          <UserInputs
-            userNameInputHandle={this.userNameInputHandle}
-            birthDateInputHandle={this.birthDateInputHandle}
-            adressInputHandle={this.adressInputHandle}
-            cityInputInputHandle={this.cityInputInputHandle}
-            phoneInputHandle={this.phoneInputHandle}
-            editUser={this.state.editUser}
-          />
-        </UserModal>
+          onCancel={this.closeEditModal}
+        />*/}
         <UsersTable
           usersData={usersData}
           openEditModal={this.openEditModal}
