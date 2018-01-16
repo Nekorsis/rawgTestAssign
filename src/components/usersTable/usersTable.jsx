@@ -11,11 +11,11 @@ const UsersTable = (props) => {
           <th>Адрес</th>
           <th>Город</th>
           <th>Телефон</th>
-          <th></th>
+          <th/>
         </tr>
       </thead>
       <tbody>
-        {props.usersData.map(user => {
+        {props.usersData.map((user) => {
           return (
             <tr key={user.id}>
               <td>{user.name}</td>
@@ -23,14 +23,14 @@ const UsersTable = (props) => {
               <td>{user.adress}</td>
               <td>{user.city}</td>
               <td>{user.phone}</td>
-              <td onClick={() => {props.openEditModal(user)}}>{'Редактировать'}</td>
-              <td onClick={() => {props.deleteUser(user.id)}}>{'Удалить'}</td>
+              <td onClick={() => { props.openEditModal(user); }}>Редактировать</td>
+              <td onClick={() => { props.deleteUser(user.id); }}>Удалить</td>
             </tr>
-          )
+          );
         })}
       </tbody>
     </Table>
   );
-}
+};
 
 export default UsersTable;

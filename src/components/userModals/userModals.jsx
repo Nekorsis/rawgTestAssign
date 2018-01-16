@@ -13,8 +13,8 @@ class UserModal extends React.Component {
       cityInputValue: '',
       phoneInputValue: '',
       errors: null,
-    }
-  };
+    };
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.editUser !== null) {
@@ -25,16 +25,8 @@ class UserModal extends React.Component {
         cityInputValue: nextProps.editUser.city,
         phoneInputValue: nextProps.editUser.phone,
       });
-    };
-  };
-
-  validators = {
-    userNameInputValue: (form) => form.userNameInputValue === '' ? 'name_error' : undefined,
-    birthDateInputValue: (form) => form.birthDateInputValue === '' ? 'birthDate_error' : undefined,
-    adressInputValue: (form) => form.adressInputValue === '' ? 'adress_error' : undefined,
-    cityInputValue: (form) => form.cityInputValue === '' ? 'city_error' : undefined,
-    phoneInputValue: (form) => form.phoneInputValue === '' ? 'phone_error' : undefined,
-  };
+    }
+  }
 
   userNameInputHandle = (e) => {
     this.setState({
@@ -68,11 +60,11 @@ class UserModal extends React.Component {
 
   validateInputs = (form, validators) => {
     return Object.keys(form)
-      .map(key => {
-        const validator = validators[key]
+      .map((key) => {
+        const validator = validators[key];
         return validator(form);
       })
-      .filter(Boolean)
+      .filter(Boolean);
   };
 
   getFromState = () => {
@@ -83,6 +75,14 @@ class UserModal extends React.Component {
       cityInputValue: this.state.cityInputValue,
       phoneInputValue: this.state.phoneInputValue,
     };
+  };
+
+  validators = {
+    userNameInputValue: form => form.userNameInputValue === '' ? 'name_error' : undefined,
+    birthDateInputValue: form => form.birthDateInputValue === '' ? 'birthDate_error' : undefined,
+    adressInputValue: form => form.adressInputValue === '' ? 'adress_error' : undefined,
+    cityInputValue: form => form.cityInputValue === '' ? 'city_error' : undefined,
+    phoneInputValue: form => form.phoneInputValue === '' ? 'phone_error' : undefined,
   };
 
   resetModalState = () => {
@@ -98,26 +98,23 @@ class UserModal extends React.Component {
 
   onAddSuccsess = () => {
     this.setState(() => {
-      return { errors: this.validateInputs(this.getFromState(), this.validators) }
+      return { errors: this.validateInputs(this.getFromState(), this.validators) };
     });
-    const localErrors =  this.validateInputs(this.getFromState(), this.validators);
+    const localErrors = this.validateInputs(this.getFromState(), this.validators);
     if (localErrors && localErrors.length === 0) {
       this.props.onSuccsess(this.getFromState());
       this.resetModalState();
-      return;
     }
-    console.log('user cannot be created');
   };
 
   onEditSuccsess =() => {
     this.setState(() => {
-      return { errors: this.validateInputs(this.getFromState(), this.validators) }
+      return { errors: this.validateInputs(this.getFromState(), this.validators) };
     });
-    const localErrors =  this.validateInputs(this.getFromState(), this.validators);
+    const localErrors = this.validateInputs(this.getFromState(), this.validators);
     if (localErrors && localErrors.length === 0) {
       this.props.onSuccsess(this.getFromState());
       this.resetModalState();
-      return;
     }
   }
 
@@ -135,11 +132,11 @@ class UserModal extends React.Component {
           {this.state.errors && this.state.errors.includes('name_error') ? <Label bsStyle="danger">Введите ФИО</Label> : null}
           <input
             maxLength={100}
-            type={"text"}
-            className={"form-control"}
+            type="text"
+            className="form-control"
             value={this.state.userNameInputValue}
             onChange={this.userNameInputHandle}
-            placeholder={"ФИО"}
+            placeholder="ФИО"
           />
           {this.state.errors && this.state.errors.includes('birthDate_error') ? <Label bsStyle="danger">Выберите дату</Label> : null}
           <div>
@@ -153,36 +150,36 @@ class UserModal extends React.Component {
           {this.state.errors && this.state.errors.includes('city_error') ? <Label bsStyle="danger">Введите город</Label> : null}
           <input
             maxLength={100}
-            className={"form-control"}
+            className="form-control"
             value={this.state.cityInputValue}
             onChange={this.cityInputInputHandle}
-            placeholder={"Город"}
+            placeholder="Город"
           />
           {this.state.errors && this.state.errors.includes('adress_error') ? <Label bsStyle="danger">Введите адрес</Label> : null}
           <input
             maxLength={100}
-            className={"form-control"}
+            className="form-control"
             value={this.state.adressInputValue}
             onChange={this.adressInputHandle}
-            placeholder={"Адрес"}
+            placeholder="Адрес"
           />
           {this.state.errors && this.state.errors.includes('phone_error') ? <Label bsStyle="danger">Введите телефон</Label> : null}
           <InputMask
-            className={"form-control"}
+            className="form-control"
             onChange={this.phoneInputHandle}
             defaultValue={this.state.phoneInputValue}
-            placeholder={"Телефон"}
+            placeholder="Телефон"
             mask={'+7\\ 999 999 99 99'}
             maskChar=" "
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onCancel}>{'Отмена'}</Button>
-          <Button bsStyle="primary" onClick={this.onAddSuccsess}>{'Добавить'}</Button>
+          <Button onClick={this.props.onCancel}>Отмена</Button>
+          <Button bsStyle="primary" onClick={this.onAddSuccsess}>Добавить</Button>
         </Modal.Footer>
       </Modal>
     );
   }
-};
+}
 
 export default UserModal;

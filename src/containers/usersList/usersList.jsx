@@ -1,10 +1,9 @@
 import React from 'react';
-import { Grid, Panel, Button, PageHeader, Modal } from 'react-bootstrap';
-import User from './../../components/user/user.jsx';
-import UserInputs from './../../components/userInputs/userInputs.jsx';
+import { Grid, Panel, Button, PageHeader } from 'react-bootstrap';
+import uuidv1 from 'uuid/v1';
 import UsersTable from './../../components/usersTable/usersTable.jsx';
 import UserModal from './../../components/userModals/userModals.jsx';
-import uuidv1 from 'uuid/v1';
+
 
 import './../../styles/index.css';
 
@@ -16,7 +15,6 @@ class UsersList extends React.PureComponent {
       users: null,
       editUser: null,
       isEditing: false,
-      formErrors: null,
     };
   }
 
@@ -37,9 +35,7 @@ class UsersList extends React.PureComponent {
 
   deleteUser = (userId) => {
     const users = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : [];
-    const updatedUsers = users.filter(user => {
-      return user.id !== userId;
-    })
+    const updatedUsers = users.filter(user => user.id !== userId);
     localStorage.setItem('usersList', JSON.stringify(updatedUsers));
     this.setState({
       users: updatedUsers,
@@ -47,30 +43,24 @@ class UsersList extends React.PureComponent {
   };
 
   openAddModal = () => {
-    this.setState(() => {
-      return {
-        isModalOpen: true,
-       };
-    });
+    this.setState(() => ({
+      isModalOpen: true,
+    }));
   };
 
   openEditModal = (user) => {
-    this.setState(() => {
-      return {
-        isEditing: true,
-        isModalOpen: true,
-        editUser: user,
-       };
-    });
+    this.setState(() => ({
+      isEditing: true,
+      isModalOpen: true,
+      editUser: user,
+    }));
   };
-  
+
   closeEditModal = () => {
-    this.setState(() => {
-      return {
-        isEditing: false,
-        isModalOpen: false,
-      };
-    });
+    this.setState(() => ({
+      isEditing: false,
+      isModalOpen: false,
+    }));
   };
 
   editUser = (inputsData) => {
@@ -80,8 +70,7 @@ class UsersList extends React.PureComponent {
     users.forEach((item, index) => {
       if (item.id === user.id) {
         userIndex = index;
-        return;
-      };
+      }
     });
     const User = {
       id: user.id,
@@ -91,7 +80,7 @@ class UsersList extends React.PureComponent {
       city: inputsData.cityInputValue,
       phone: inputsData.phoneInputValue,
     };
-    let updatedUsers = users;
+    const updatedUsers = users;
     updatedUsers[userIndex] = User;
     localStorage.setItem('usersList', JSON.stringify(updatedUsers));
     this.setState({
@@ -100,40 +89,31 @@ class UsersList extends React.PureComponent {
     this.closeEditModal();
   };
 
-  render () {
+  render() {
     const usersData = localStorage.getItem('usersList') ? JSON.parse(localStorage.getItem('usersList')) : null;
     return (
       <Grid>
-      <Panel>
-        <PageHeader>
-          {'Rawg test assign '} 
-          <Button onClick={this.openAddModal} bsStyle="primary" >
-            {' Добавить пользователя'}
-          </Button>
-        </PageHeader>
-        <UserModal
-          editUser={this.state.editUser}
-          show={this.state.isModalOpen}
-          onHide={this.closeEditModal}
-          title={this.state.isEditing === false ? 'Добавить пользователя' : 'Отредактировать пользователя'}
-          onSuccsess={this.state.isEditing === false ? this.addUser : this.editUser}
-          onCancel={this.closeEditModal}
-        />
-
-        {/*<UserModal
-          editUser={this.state.editUser}
-          show={this.state.isModalOpen}
-          onHide={this.closeEditModal}
-          title={'Отредактировать пользователя'}
-          onSuccsess={this.editUser}
-          onCancel={this.closeEditModal}
-        />*/}
-        <UsersTable
-          usersData={usersData}
-          openEditModal={this.openEditModal}
-          deleteUser={this.deleteUser}
-        />
-      </Panel>
+        <Panel>
+          <PageHeader>
+            {'Rawg test assign '}
+            <Button onClick={this.openAddModal} bsStyle="primary" >
+              {' Добавить пользователя'}
+            </Button>
+          </PageHeader>
+          <UserModal
+            editUser={this.state.editUser}
+            show={this.state.isModalOpen}
+            onHide={this.closeEditModal}
+            title={this.state.isEditing === false ? 'Добавить пользователя' : 'Отредактировать пользователя'}
+            onSuccsess={this.state.isEditing === false ? this.addUser : this.editUser}
+            onCancel={this.closeEditModal}
+          />
+          <UsersTable
+            usersData={usersData}
+            openEditModal={this.openEditModal}
+            deleteUser={this.deleteUser}
+          />
+        </Panel>
       </Grid>
     );
   }
