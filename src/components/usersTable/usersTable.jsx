@@ -15,7 +15,7 @@ const UsersTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.usersData.map((user) => {
+        {props.usersData ? props.usersData.map((user) => {
           return (
             <tr key={user.id}>
               <td>{user.name}</td>
@@ -27,7 +27,7 @@ const UsersTable = (props) => {
               <td onClick={() => { props.deleteUser(user.id); }}>Удалить</td>
             </tr>
           );
-        })}
+        }) : null}
       </tbody>
     </Table>
   );

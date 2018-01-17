@@ -5,7 +5,7 @@ rawgTestAssign
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:8080
 npm start
 
 ```
