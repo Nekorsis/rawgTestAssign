@@ -36,10 +36,11 @@ module.exports = {
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin(
       {
-        inject: true,
+        //inject: true,
         template: './index.html'
       }
     ),
+    
   ],
   output: {
     filename: 'bundle.js',
